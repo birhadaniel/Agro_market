@@ -1,3 +1,4 @@
+import Link from "next/link"
 
 const Navbar = () => {
   return (
@@ -7,18 +8,24 @@ const Navbar = () => {
             AgriMarket AI
         </div>
         <div className="flex gap-6 text-sm">
-         <a href="#" className="hover:text-green-600">Home</a>
-         <a href="#" className="hover:text-green-600">About</a>
-         <a href="#" className="hover:text-green-600">Market info</a>
-         <a href="#" className="hover:text-green-600">Login</a>
+         <Link href="/" className="hover:text-green-600">Home</Link>
+         <Link href="/about" className="hover:text-green-600">About</Link>
+         <Link href="/market" className="hover:text-green-600">Market info</Link>
+         <Link href="/login" className="hover:text-green-600">Login</Link>
         </div>
         <div className="flex gap-2">
-            <button className="bg-green-600! text-white px-3 py-1 rounded text-sm hover:bg-green-700!">
+            <Link 
+              href="/register/farmer"
+              className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+            >
                 Register as Farmer
-            </button>
-            <button className="border border-green-600 text-green-700 px-3 py-1 rounded text-sm hover:bg-green-50!">
+            </Link>
+            <Link 
+              href="/register/buyer"
+              className="border border-green-600 text-green-700 px-3 py-1 rounded text-sm hover:bg-green-50"
+            >
                 Register as Buyer
-            </button>
+            </Link>
         </div>
     </nav>
   )
