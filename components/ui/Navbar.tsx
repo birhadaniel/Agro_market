@@ -15,7 +15,7 @@ const Navbar = () => {
         </div>
         <div className="flex gap-2">
             <Link 
-              href="/register/farmer"
+              href="/farmer/register"
               className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
             >
                 Register as Farmer
