@@ -36,13 +36,7 @@ export default function RegisterPage() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-[#f4f9f3]">
       <div className="bg-white shadow-lg rounded-2xl p-10 w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold">Register as a Farmer</h1>
-          <p className="text-gray-600 mt-1">
-            Create your account to connect with the market.
-          </p>
-        </div>
-
+        <h1 className="text-2xl font-bold text-center mb-8">Register as a Farmer</h1>
         <form onSubmit={handleSubmit} className="space-y-4 text-left">
           <div>
             <Label htmlFor="name">Full Name</Label>
@@ -96,21 +90,6 @@ export default function RegisterPage() {
               required
             />
           </div>
-
-          <div>
-            <Label htmlFor="size">Farm Size (in hectares)</Label>
-            <Input
-              id="size"
-              name="size"
-              type="number"
-              placeholder="e.g., 50"
-              value={form.size}
-              onChange={handleChange}
-              className="bg-green-50 focus:ring-green-500"
-              required
-            />
-          </div>
-
           <div>
             <Label htmlFor="password">Password</Label>
             <Input
@@ -142,7 +121,7 @@ export default function RegisterPage() {
           <div className="flex items-center space-x-2">
             <Checkbox
               id="agree"
-              name="agree"
+              label="agree"
               checked={form.agree}
               onCheckedChange={(checked) =>
                 setForm((prev) => ({ ...prev, agree: !!checked }))

@@ -64,7 +64,7 @@ export default function LoginPage() {
         {/* Register Link */}
         <p className="text-center text-sm text-gray-700 mt-6">
           Don’t have an account?{" "}
-          <Link href="farmer/register" className="text-green-600 font-medium hover:underline">
+          <Link href="/farmer/register" className="text-green-600 font-medium hover:underline">
             Register Now
           </Link>
         </p>
