@@ -119,19 +119,9 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Checkbox
-              id="agree"
-              label="agree"
-              checked={form.agree}
-              onCheckedChange={(checked) =>
-                setForm((prev) => ({ ...prev, agree: !!checked }))
-              }
-            />
+            <Checkbox/>
             <Label htmlFor="agree" className="text-sm text-gray-600">
-              I agree to the{" "}
-              <Link href="#" className="text-green-600 font-medium">
-                Terms and Conditions
-              </Link>
+              I agree to Terms and Conditions
             </Label>
           </div>
 
