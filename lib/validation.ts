@@ -30,3 +30,8 @@ export const registerSchema = z.object({
     .boolean()
     .refine(val => val === true, 'You must agree to the terms and conditions'),
 });
+
+export const loginSchema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters long"),
+});
