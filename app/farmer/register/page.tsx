@@ -6,8 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { registerFarmer } from "@/lib/api";
+import { useRouter } from "next/navigation";
+
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,6 +23,7 @@ export default function RegisterPage() {
     confirmPassword: "",
     agree: false,
   });
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -27,10 +33,25 @@ export default function RegisterPage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(form);
-    // You can integrate API logic here later
+    try {
+      setLoading(true);
+      const result = await registerFarmer({
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        location: form.location,
+        password: form.password,
+        agree: form.agree,
+      });
+      console.log("Farmer registered:", result);
+      router.push("/farmer/login");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -119,17 +140,24 @@ export default function RegisterPage() {
           </div>
 
           <div className="flex items-center space-x-2">
-            <Checkbox/>
+            <Checkbox
+              id="agree"
+              checked={form.agree}
+              onCheckedChange={(checked) => 
+              setForm((prev) => ({ ...prev, agree: checked === true }))
+             }
+            />
             <Label htmlFor="agree" className="text-sm text-gray-600">
               I agree to Terms and Conditions
             </Label>
           </div>
 
           <Button
+            disabled={loading}
             type="submit"
             className="w-full bg-green-600 hover:bg-green-700 text-white rounded-lg"
           >
-            Register
+            {loading ? "Registering..." : "Register"}
           </Button>
         </form>
 
