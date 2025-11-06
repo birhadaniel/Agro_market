@@ -7,6 +7,7 @@ import Header from "@/components/ui/header";
 import { Sidebar } from "@/components/ui/sidebar";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 
 interface Farmer {
@@ -25,7 +26,7 @@ export default function FarmerDashboard() {
     });
   
   return (
-    <div className="min-h-screen flex bg-[#F3FAF2] text-gray-800">
+    <div className="min-h-screen flex bg-green-50 text-gray-800">
       {/* Sidebar */}
       <Sidebar />
 
@@ -45,11 +46,12 @@ export default function FarmerDashboard() {
                 Here&apos;s what&apos;s happening on your farm today.
               </p>
             </div>
-            <Button className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 rounded-lg px-4">
-              <Plus size={16} />
-                Add Product
-            </Button>
-
+            <Link href='/farmer/dashboard/new-product'>
+              <Button className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2 rounded-lg px-4">
+                <Plus size={16} />
+                  Add Product
+              </Button>
+            </Link>
           </div>
           {/* Stats Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
