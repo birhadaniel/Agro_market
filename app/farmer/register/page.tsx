@@ -1,17 +1,19 @@
 "use client";
-
+import * as React from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { registerFarmer } from "@/lib/api";
 import { useRouter } from "next/navigation";
 
 
+
+
 export default function RegisterPage() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -21,9 +23,8 @@ export default function RegisterPage() {
     size: "",
     password: "",
     confirmPassword: "",
-    agree: false,
   });
-  const [loading, setLoading] = useState(false);
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -35,6 +36,10 @@ export default function RegisterPage() {
 
   const handleSubmit =async (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.password !== form.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
     try {
       setLoading(true);
       const result = await registerFarmer({
@@ -43,7 +48,6 @@ export default function RegisterPage() {
         phone: form.phone,
         location: form.location,
         password: form.password,
-        agree: form.agree,
       });
       console.log("Farmer registered:", result);
       router.push("/farmer/login");
@@ -138,20 +142,6 @@ export default function RegisterPage() {
               required
             />
           </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox
-              id="agree"
-              checked={form.agree}
-              onCheckedChange={(checked) => 
-              setForm((prev) => ({ ...prev, agree: checked === true }))
-             }
-            />
-            <Label htmlFor="agree" className="text-sm text-gray-600">
-              I agree to Terms and Conditions
-            </Label>
-          </div>
-
           <Button
             disabled={loading}
             type="submit"

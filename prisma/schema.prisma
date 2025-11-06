@@ -21,7 +21,6 @@ model Farmer {
   phone          String   @unique
   location       String
   password       String
-  agree          Boolean  @default(false)
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 }

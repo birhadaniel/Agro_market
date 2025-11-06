@@ -28,7 +28,6 @@ export async function registerFarmer(data: {
   phone: string;
   location: string;
   password: string;
-  agree: boolean;
 }) {
   return apiRequest("/api/farmer/register", {
     method: "POST",

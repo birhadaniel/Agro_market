@@ -12,7 +12,7 @@ export async function registerFarmer(data: unknown) {
     };
   }
 
-  const { name, email, phone, location, password, agree } = parsed.data;
+  const { name, email, phone, location, password} = parsed.data;
 
   const existingFarmer = await prisma.farmer.findUnique({ where: { email } });
   if (existingFarmer) {
@@ -31,7 +31,6 @@ export async function registerFarmer(data: unknown) {
       phone,
       location,
       password: hashedPassword,
-      agree,
     },
   });
 
