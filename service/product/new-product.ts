@@ -1,38 +1,41 @@
-import { prisma } from "@/lib/client";
+
+import cloudinary from "cloudinary";
+import prisma from "@/lib/client";
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
+});
 
 export const productService = {
+  async uploadImage(file: File) {
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    return new Promise<{ url: string; public_id: string }>((resolve, reject) => {
+      cloudinary.v2.uploader
+        .upload_stream({ folder: "products" }, (error, result) => {
+          if (error || !result) return reject(error);
+          resolve({ url: result.secure_url, public_id: result.public_id });
+        })
+        .end(buffer);
+    });
+  },
+
   async createProduct(data: {
     name: string;
-    description?: string;
     category: string;
     price: number;
     quantity: number;
     unit: string;
-    imageUrl?: string;
-    harvestDate?: string;
+    imageUrl: string;
     farmerId: number;
   }) {
-    return await prisma.product.create({
-      data: {
-        name: data.name,
-        description: data.description,
-        category: data.category,
-        price: data.price,
-        quantity: data.quantity,
-        unit: data.unit,
-        imageUrl: data.imageUrl,
-        farmerId: data.farmerId,
-        createdAt: data.harvestDate
-          ? new Date(data.harvestDate)
-          : new Date(),
-      },
-    });
+    return prisma.product.create({ data });
   },
 
   async getAllProducts() {
-    return await prisma.product.findMany({
-      include: { farmer: true },
-      orderBy: { createdAt: "desc" },
-    });
+    return prisma.product.findMany({ include: { farmer: true } });
   },
 };

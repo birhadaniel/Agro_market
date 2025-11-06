@@ -21,7 +21,8 @@ model Product {
   price       Float
   quantity    Int
   unit        String      
-  imageUrl    String?      
+  imageUrl    String? 
+  harvestDate DateTime?     
   farmer      Farmer       @relation(fields: [farmerId], references: [id])
   farmerId    Int
   createdAt   DateTime     @default(now())

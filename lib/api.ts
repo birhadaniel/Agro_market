@@ -60,3 +60,26 @@ export async function loginFarmer(data: {
 
   return response;
 }
+
+
+export async function addProduct(data: {
+  name: string;
+  description?: string;
+  category: string;
+  price: number;
+  quantity: number;
+  unit: string;
+  imageUrl?: string;
+  farmerId: number;
+}) {
+  return apiRequest("/products", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function getProducts() {
+  return apiRequest("/products", {
+    method: "GET",
+  });
+}
