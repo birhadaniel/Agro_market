@@ -49,8 +49,14 @@ export async function loginFarmer(data: {
   email: string;
   password: string;
 }) {
-  return apiRequest("/farmer/login", {
+  const response = await apiRequest("/farmer/login", {
     method: "POST",
     body: JSON.stringify(data),
   });
+   if (response.token && response.farmer) {
+    localStorage.setItem("token", response.token);
+    localStorage.setItem("farmer", JSON.stringify(response.farmer));
+  }
+
+  return response;
 }
