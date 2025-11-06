@@ -1,26 +1,36 @@
 
-export const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
-
+const API_URL ='/api';
+  
+const getToken = () => {
+  if (typeof window === "undefined") return null;
+  return localStorage.getItem("token");
+};
 export async function apiRequest<T>(
-  endpoint: string,
+  url: string,
   options: RequestInit = {}
-): Promise<T> {
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-    headers: {
+){
+  const token = getToken();
+
+  const headers = {
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
-    },
-    ...options,
-  });
+    };
 
-  if (!res.ok) {
-    const errorData = await res.json().catch(() => ({}));
-    throw new Error(errorData.error || "Request failed");
-  }
+    const response = await fetch(`${API_URL}${url}`, { ...options, headers });
+  
+    if (response.status === 204) {
+      return null; 
+    }
+    
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Request failed");
+    }
+    
+      return response.json();
+  };
 
-  return res.json();
-}
 
 export async function registerFarmer(data: {
   name: string;
@@ -29,7 +39,7 @@ export async function registerFarmer(data: {
   location: string;
   password: string;
 }) {
-  return apiRequest("/api/farmer/register", {
+  return apiRequest("/farmer/register", {
     method: "POST",
     body: JSON.stringify(data),
   });
@@ -39,7 +49,7 @@ export async function loginFarmer(data: {
   email: string;
   password: string;
 }) {
-  return apiRequest("/api/farmer/login", {
+  return apiRequest("/farmer/login", {
     method: "POST",
     body: JSON.stringify(data),
   });

@@ -1,52 +1,31 @@
 import bcrypt from "bcryptjs";
-import { prisma } from "@/lib/client";
-import { loginSchema } from "@/lib/validation";
-import jwt from "jsonwebtoken";
+import prisma  from "@/lib/client";
+import { generateToken } from "@/lib/auth";
 
-export async function loginFarmer(data: unknown) {
-  const parsed = loginSchema.safeParse(data);
-  if (!parsed.success) {
-    return {
-      success: false,
-      errors: parsed.error.flatten().fieldErrors,
-    };
-  }
-
-  const { email, password } = parsed.data;
+export async function loginFarmer(
+   { email, password }: 
+  { email: string; password: string }
+) {
 
   const farmer = await prisma.farmer.findUnique({ where: { email } });
   if (!farmer) {
-    return {
-      success: false,
-      errors: { email: ["No account found with this email"] },
-    };
+    throw new Error('Invalid credentials');
   }
 
   const isPasswordValid = await bcrypt.compare(password, farmer.password);
   if (!isPasswordValid) {
-    return {
-      success: false,
-      errors: { password: ["Incorrect password"] },
-    };
+     throw new Error('Invalid credentials');
   }
 
-  const token = jwt.sign(
-    {
-      id: farmer.id,
-      email: farmer.email,
-      name: farmer.name,
-    },
-    process.env.JWT_SECRET as string, 
-    { expiresIn: "7d" } 
-  );
-
-  const { password: _, ...farmerData } = farmer;
+  const token = generateToken({farmerId: farmer.id});
 
   return {
-    success: true,
-     data: {
-      ...farmerData,
-      token, 
-    },
+    id: farmer.id, 
+    name: farmer.name, 
+    email: farmer.email, 
+    phone: farmer.phone, 
+    location: farmer.location, 
+    token
+    
   };
 }

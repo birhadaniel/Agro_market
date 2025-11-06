@@ -1,25 +1,16 @@
-
-import { registerSchema } from "@/lib/validation";
+import { generateToken } from "@/lib/auth";
 import  prisma  from "@/lib/client";
 import bcrypt from "bcryptjs";
 
-export async function registerFarmer(data: unknown) {
-  const parsed = registerSchema.safeParse(data);
-  if (!parsed.success) {
-    return {
-      success: false,
-      errors: parsed.error.flatten().fieldErrors,
-    };
-  }
-
-  const { name, email, phone, location, password} = parsed.data;
-
-  const existingFarmer = await prisma.farmer.findUnique({ where: { email } });
-  if (existingFarmer) {
-    return {
-      success: false,
-      errors: { email: ["Email is already registered"] },
-    };
+export async function registerFarmer(
+  { name, email, phone, location, password}:
+  { name: string; email: string; phone: string; location: string; password: string}
+) {
+  const existFarmer = await prisma.farmer.findFirst({
+    where: { OR: [{email}, { phone}]},
+  });
+  if (existFarmer) {
+    throw new Error("Farmer with this email or phone already exists");
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,8 +25,14 @@ export async function registerFarmer(data: unknown) {
     },
   });
 
-  return {
-    success: true,
-    data: farmer,
+  const token = generateToken({ farmerId: farmer.id });
+
+   return { 
+    id: farmer.id, 
+    name: farmer.name, 
+    email: farmer.email,
+    phone: farmer.phone, 
+    location: farmer.location, 
+    token 
   };
 }
